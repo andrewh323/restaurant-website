@@ -1,0 +1,205 @@
+drop database if exists restaurantDB;
+create database restaurantDB;
+
+
+create table restaurant(
+    	restaurantName		varchar(50) primary key,
+	restaurantAddress	varchar(50) not null,
+	restaurantURL		varchar(20) not null);
+
+insert into restaurant(restaurantName, restaurantAddress, restaurantURL)
+values	('restaurantA', '123 Road Road', 'restaurantA.com'),
+	('restaurantB', '124 Road Road', 'restaurantB.com'),
+	('restaurantC', '125 Road Road', 'restaurantC.com'),
+	('restaurantD', '126 Road Road', 'restaurantD.com'),
+	('restaurantE', '127 Road Road', 'restaurantE.com'),
+	('restaurantF', '128 Road Road', 'restaurantF.com');
+	
+
+create table employee(
+	employeeID	integer primary key,
+	employeeName	varchar(50) not null,
+	emailAddress	varchar(50),
+	restaurantName	varchar(50) not null,
+	foreign key (restaurantName) references restaurant(restaurantName));
+
+insert into employee (employeeID, employeeName, emailAddress, restaurantName)
+values	(1, 'Andrew', 'Andrew@gmail.com', 'restaurantA'),
+	(2, 'Rob', 'Rob@gmail.com', 'restaurantB'),
+	(3, 'Kevin', 'Kevin@gmail.com', 'restaurantC'),
+	(4, 'Paul', 'Paul@gmail.com', 'restaurantD'),
+	(5, 'Rhiannon', 'Rhiannon@gmail.com', 'restaurantE'),
+	(6, 'Albert', 'Albert@gmail.com', 'restaurantF'),
+	(7, 'Ape', 'ape@gmail.com', 'restaurantA'),
+	(8, 'Chimp', 'chimp@gmail.com', 'restaurantB'),
+	(9, 'Monkey', 'monkey@gmail.com', 'restaurantC'),
+	(10, 'Gorilla', 'gorilla@gmail.com', 'restaurantD'),
+	(11, 'Mandrill', 'mandrill@gmail.com', 'restaurantE'),
+	(12, 'Baboon', 'baboon@gmail.com', 'restaurantF');
+	
+
+create table customer(
+	customerEmail	varchar(50) primary key,
+	customerName	varchar(50) not null,
+	customerPhone	int,
+	customerAddress	varchar(50) not null);
+
+insert into customer (customerEmail, customerName, customerPhone, customerAddress)
+values	('Wesley@gmail.com', 'Wesley', 1234567890, '123 Town Road'),
+	('Jason@gmail.com', 'Jason', 1234567891, '124 Town Road'),
+	('Jeff@gmail.com', 'Jeff', 1234567892, '125 Town Road'),
+	('Joe@gmail.com', 'Joe', 1234567893, '126 Town Road'),
+	('Jared@gmail.com', 'Jared', 1234567894, '127 Town Road'),
+	('Jacqueline@gmail.com', 'Jacqueline', 1234567895, '128 Town Road');
+	
+
+create table customerOrder(
+	orderID		integer primary key,
+	tip		float(10),
+	totalPrice	float(10) not null,
+	orderDate	varchar(50) not null,
+	orderPlaceTime	varchar(50) not null,
+	orderDelivTime	varchar(50) not null,
+	itemsOrdered	varchar(100) not null,
+	deliverer	varchar(50) not null,
+	customerEmail	varchar(50) not null,
+	restaurantName	varchar(50) not null,
+	foreign key (customerEmail) references customer(customerEmail),
+	foreign key (restaurantName) references restaurant(restaurantName));
+
+insert into customerOrder (orderID, tip, totalPrice, orderDate, orderPlaceTime, orderDelivTime, itemsOrdered, deliverer, customerEmail, restaurantName)
+values	(1, 0.5, 5, 'Feb1', '1PM', '2PM', 'Big Mac, Milk', 'Ape', 'Wesley@gmail.com', 'restaurantA'),
+	(2, 0.5, 2, 'Feb2', '2PM', '3PM', 'Chicken', 'Ape', 'Jason@gmail.com', 'restaurantB'),
+	(3, 0.5, 4, 'Feb2', '3PM', '4PM', 'Milk', 'Monkey', 'Jeff@gmail.com', 'restaurantC'),
+	(4, 0.5, 11, 'Feb4', '4PM', '5PM', 'Apple, Salad', 'Mandrill', 'Joe@gmail.com', 'restaurantD'),
+	(5, 0.5, 3, 'Feb6', '5PM', '6PM', 'Potato', 'Monkey', 'Jared@gmail.com', 'restaurantE'),
+	(6, 0, 6, 'Feb6', '6PM', '7PM', 'Salad', 'Gorilla', 'Jacqueline@gmail.com', 'restaurantF');
+
+
+create table onlineMenu(
+	nameOfFood	varchar(50) not null,
+	price		float(10) not null,
+	menuName	varchar(50) primary key,
+	restaurantName	varchar(50) not null,
+	foreign key (restaurantName) references restaurant(restaurantName));
+
+insert into onlineMenu (nameOfFood, price, menuName, restaurantName)
+values	('Big Mac', 1, 'RestaurantAMenu', 'restaurantA'),
+	('Chicken', 2, 'RestaurantBMenu', 'restaurantB'),
+	('Potato', 3, 'RestaurantCMenu', 'restaurantC'),
+	('Milk', 4, 'RestaurantDMenu', 'restaurantD'),
+	('Apple', 5, 'RestaurantEMenu', 'restaurantE'),
+	('Salad', 6, 'RestaurantFMenu', 'restaurantF');
+	
+
+create table management(
+	employeeID	integer not null,
+	employeeName	varchar(50) not null,
+	emailAddress	varchar(50),
+	restaurantName	varchar(50) not null,
+	primary key (employeeName),
+	foreign key (employeeID) references employee(employeeID),
+	foreign key (restaurantName) references restaurant(restaurantName));
+
+insert into management(employeeName, emailAddress, employeeID, restaurantName)
+values	('Andrew', 'Andrew@gmail.com', '1', 'restaurantA'),
+	('Rob', 'Rob@gmail.com', '2', 'restaurantB'),
+	('Kevin', 'Kevin@gmail.com', '3', 'restaurantC'),
+	('Paul', 'Paul@gmail.com', '4', 'restaurantD'),
+	('Rhiannon', 'Rhiannon@gmail.com', '5', 'restaurantE'),
+	('Albert', 'Albert@gmail.com', '6', 'restaurantF');
+
+
+create table delivery(
+	employeeID	integer not null,
+	employeeName	varchar(50) not null,
+	emailAddress	varchar(50),
+	restaurantName	varchar(50) not null,
+	primary key (employeeName),
+	foreign key (employeeID) references employee(employeeID),
+	foreign key (restaurantName) references restaurant(restaurantName));
+
+insert into delivery(employeeName, emailAddress, employeeID, restaurantName)
+values	('Ape', 'ape@gmail.com', '7', 'restaurantA'),
+	('Chimp', 'chimp@gmail.com', '8', 'restaurantB'),
+	('Monkey', 'monkey@gmail.com', '9', 'restaurantC'),
+	('Gorilla', 'gorilla@gmail.com', '10', 'restaurantD'),
+	('Mandrill', 'mandrill@gmail.com', '11', 'restaurantE'),
+	('Baboon', 'baboon@gmail.com', '12', 'restaurantF');
+
+
+create table serverEmp(
+	employeeID	integer not null,
+	employeeName	varchar(50) not null,
+	emailAddress	varchar(50),
+	restaurantName	varchar(50) not null,
+	primary key (employeeName),
+	foreign key (employeeID) references employee(employeeID),
+	foreign key (restaurantName) references restaurant(restaurantName));
+
+insert into serverEmp(employeeName, emailAddress, employeeID, restaurantName)
+values	('Ape', 'ape@gmail.com', '7', 'restaurantA'),
+	('Chimp', 'chimp@gmail.com', '8', 'restaurantB'),
+	('Monkey', 'monkey@gmail.com', '9', 'restaurantC'),
+	('Gorilla', 'gorilla@gmail.com', '10', 'restaurantD'),
+	('Mandrill', 'mandrill@gmail.com', '11', 'restaurantE'),
+	('Baboon', 'baboon@gmail.com', '12', 'restaurantF');
+
+
+create table chef(
+	employeeID	integer not null,
+	employeeName	varchar(50) not null,
+	emailAddress	varchar(50),
+	credentials	varchar(50) not null,
+	restaurantName	varchar(50) not null,
+	primary key (employeeName),
+	foreign key (employeeID) references employee(employeeID),
+	foreign key (restaurantName) references restaurant(restaurantName));
+
+insert into chef(employeeName, emailAddress, credentials, employeeID, restaurantName)
+values	('Ape', 'ape@gmail.com', 'good at eggs', '7', 'restaurantA'),
+	('Chimp', 'chimp@gmail.com', 'good at steak', '8', 'restaurantB'),
+	('Monkey', 'monkey@gmail.com', 'good at burgers', '9', 'restaurantC'),
+	('Gorilla', 'gorilla@gmail.com', 'good at bread', '10', 'restaurantD'),
+	('Mandrill', 'mandrill@gmail.com', 'good at pastries', '11', 'restaurantE'),
+	('Baboon', 'baboon@gmail.com', 'good at nothing', '12', 'restaurantF');
+
+
+create table schedule(
+	employeeID	integer not null,
+	endTimes	varchar(50) not null,
+	startTimes	varchar(50) not null,
+	days		varchar(50) not null,
+	primary key (employeeID),
+	foreign key (employeeID) references employee(employeeID));
+
+insert into schedule (startTimes, endTimes, days, employeeID)
+values	('6AM', '2PM', 'Monday Tuesday Wednesday Thursday', 1),
+	('7AM', '3PM', 'Tuesday Wednesday Thursday Friday', 2),
+	('8AM', '4PM', 'Wednesday Thursday Friday Saturday', 3),
+	('9AM', '5PM', 'Thursday Friday Saturday Sunday', 4),
+	('10AM', '6PM', 'Friday Saturday Sunday Monday', 5),
+	('11AM', '7PM', 'Saturday Sunday Monday Tuesday', 6),
+	('6AM', '2PM', 'Monday Tuesday Wednesday Thursday', 7),
+	('7AM', '3PM', 'Tuesday Wednesday Thursday Friday', 8),
+	('8AM', '4PM', 'Wednesday Thursday Friday Saturday', 9),
+	('9AM', '5PM', 'Thursday Friday Saturday Sunday', 10),
+	('10AM', '6PM', 'Friday Saturday Sunday Monday', 11),
+	('11AM', '7PM', 'Saturday Sunday Monday Tuesday', 12);
+	
+
+create table customerAccount(
+	paymentDate	varchar(50),
+	paymentsMade	varchar(50),
+	amountOfCredit	integer not null,
+	customerEmail	varchar(50) not null,
+	primary key (customerEmail),
+	foreign key (customerEmail) references customer(customerEmail));
+
+insert into customerAccount (paymentDate, paymentsMade, amountOfCredit, customerEmail)
+values	('Jan1', '$5.50', 10, 'Wesley@gmail.com'),
+	('Jan2', '$6.50', 100, 'Jason@gmail.com'),
+	('Jan3', '$7.50', 1000, 'Jeff@gmail.com'),
+	('Jan4', '$8.50', 10000, 'Joe@gmail.com'),
+	('Jan5', '$9.50', 100000, 'Jared@gmail.com'),
+	('Jan6', '$10.50', 1000000, 'Jacqueline@gmail.com');
